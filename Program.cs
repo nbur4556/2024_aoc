@@ -6,8 +6,8 @@ ListComparer listComparer = new ListComparer(
     [4, 3, 5, 3, 9, 3]
 );
 
-LocationId smallestA = listComparer.LocateSmallestNumber(listComparer._listA);
-LocationId smallestB = listComparer.LocateSmallestNumber(listComparer._listB);
+LocationId smallestA = listComparer.LocateSmallestNumber(listComparer.listA);
+LocationId smallestB = listComparer.LocateSmallestNumber(listComparer.listB);
 Console.WriteLine(smallestA.id);
 Console.WriteLine(smallestA.index);
 Console.WriteLine(smallestB.id);
@@ -27,24 +27,38 @@ public struct LocationId()
 public class ListComparer
 {
     //TODO: Should be private if possible
-    public int[] _listA;
-    public int[] _listB;
+    public LocationId[] listA;
+    public LocationId[] listB;
 
     public ListComparer(int[] listA, int[] listB)
     {
-        _listA = listA;
-        _listB = listB;
+        LocationId[] _a = new LocationId[listA.Length];
+        LocationId[] _b = new LocationId[listB.Length];
+
+        for (int i = 0; i < listA.Length; i++)
+        {
+            LocationId id = new LocationId(listA[i], i);
+            _a[i] = id;
+        }
+
+        for (int i = 0; i < listB.Length; i++)
+        {
+            LocationId id = new LocationId(listB[i], i);
+            _b[i] = id;
+        }
+
+        this.listA = _a;
+        this.listB = _b;
     }
 
-    public LocationId LocateSmallestNumber(int[] list)
+    public LocationId LocateSmallestNumber(LocationId[] list)
     {
-        LocationId smallest = new LocationId(list[0], 0);
+        LocationId smallest = list[0];
         for (int i = 0; i < list.Length; i++)
         {
-            if (list[i] < smallest.id)
+            if (list[i].id < smallest.id)
             {
-                smallest.id = list[i];
-                smallest.index = i;
+                smallest = list[i];
             }
         }
 
