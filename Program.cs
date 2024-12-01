@@ -24,6 +24,7 @@ public struct LocationId()
     }
 }
 
+// TODO: account for unequal lists?
 public class ListComparer
 {
     //TODO: Should be private if possible
@@ -32,25 +33,22 @@ public class ListComparer
 
     public ListComparer(int[] listA, int[] listB)
     {
-        LocationId[] _a = new LocationId[listA.Length];
-        LocationId[] _b = new LocationId[listB.Length];
-
-        for (int i = 0; i < listA.Length; i++)
-        {
-            LocationId id = new LocationId(listA[i], i);
-            _a[i] = id;
-        }
-
-        for (int i = 0; i < listB.Length; i++)
-        {
-            LocationId id = new LocationId(listB[i], i);
-            _b[i] = id;
-        }
-
-        this.listA = _a;
-        this.listB = _b;
+        this.listA = this.ConvertIntegerList(listA);
+        this.listB = this.ConvertIntegerList(listB);
     }
 
+    private LocationId[] ConvertIntegerList(int[] list) 
+    {
+        LocationId[] ids = new LocationId[list.Length];
+        for (int i = 0; i < list.Length; i++)
+        {
+            LocationId id = new LocationId(list[i], i);
+            ids[i] = id;
+        }
+        return ids;
+    }
+
+    // TODO: This method may not be used
     public LocationId LocateSmallestNumber(LocationId[] list)
     {
         LocationId smallest = list[0];
