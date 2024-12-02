@@ -1,13 +1,48 @@
 public class Day01A
 {
-    public Day01A()
+    private String path;
+    private ListWriter locationWriterA;
+    private ListWriter locationWriterB;
+
+    public Day01A(String[] args)
     {
-        Console.WriteLine("Created");
+        if (args.Length <= 0)
+        {
+            Console.WriteLine("Please provide a path to input data");
+            Console.WriteLine();
+        }
+        path = args[0];
+        locationWriterA = new ListWriter();
+        locationWriterB = new ListWriter();
     }
 
     public void Solve()
     {
-        Console.WriteLine("Solve");
+        String? line;
+        try
+        {
+            StreamReader sr = new StreamReader(path);
+            line = sr.ReadLine();
+            while (line != null)
+            {
+                locationWriterA.AddToList(line, true);
+                locationWriterB.AddToList(line, false);
+                line = sr.ReadLine();
+            }
+            sr.Close();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Exception: " + e.Message);
+        }
+        finally
+        {
+            LocationComparer locationComparer = new LocationComparer
+                (locationWriterA.list, locationWriterB.list);
+
+            int distances = locationComparer.CompareLocationPairDistance();
+            Console.WriteLine(distances);
+        }
     }
 
     public class ListWriter
