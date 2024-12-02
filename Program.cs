@@ -9,66 +9,43 @@ LocationComparer locationComparer = new LocationComparer(
 int distances = locationComparer.CompareLocationPairDistance();
 Console.WriteLine(distances);
 
-public struct LocationId()
-{
-    public int id, index;
-
-    public LocationId(int id, int index) : this()
-    {
-        this.id = id;
-        this.index = index;
-    }
-}
-
 public class LocationComparer
 {
-    private LocationId[] listA;
-    private LocationId[] listB;
+    private int[] listA;
+    private int[] listB;
 
     public LocationComparer(int[] listA, int[] listB)
     {
-        this.listA = this.ConvertIntegerList(listA);
-        this.listB = this.ConvertIntegerList(listB);
+        this.listA = this.SortList(listA);
+        this.listB = this.SortList(listB);
     }
 
-    // TODO: Possibly should be a method on the LocationId struct?
-    private LocationId[] ConvertIntegerList(int[] list)
-    {
-        LocationId[] ids = new LocationId[list.Length];
-        for (int i = 0; i < list.Length; i++)
-        {
-            LocationId id = new LocationId(list[i], i);
-            ids[i] = id;
-        }
-        return ids;
-    }
-
-    private LocationId[] SortList(LocationId[] list)
+    private int[] SortList(int[] list)
     {
         if (list.Length <= 1)
         {
             return list;
         }
 
-        LocationId pivot = list[0];
-        LocationId[] left = new LocationId[0];
-        LocationId[] right = new LocationId[0];
+        int pivot = list[0];
+        int[] left = new int[0];
+        int[] right = new int[0];
 
         for (int i = 1; i < list.Length; i++)
         {
-            if (list[i].id < pivot.id)
+            if (list[i] < pivot)
             {
-                left = left.Concat(new LocationId[] { list[i] }).ToArray();
+                left = left.Concat(new int[] { list[i] }).ToArray();
             }
             else
             {
-                right = right.Concat(new LocationId[] { list[i] }).ToArray();
+                right = right.Concat(new int[] { list[i] }).ToArray();
             }
         }
 
         left = this.SortList(left);
         right = this.SortList(right);
-        LocationId[] middle = new LocationId[] { pivot };
+        int[] middle = new int[] { pivot };
         return left.Concat(middle.Concat(right)).ToArray();
     }
 
@@ -76,12 +53,12 @@ public class LocationComparer
     public int CompareLocationPairDistance()
     {
         int distances = 0;
-        LocationId[] sortedLocationsA = this.SortList(this.listA);
-        LocationId[] sortedLocationsB = this.SortList(this.listB);
+        int[] sortedLocationsA = this.SortList(this.listA);
+        int[] sortedLocationsB = this.SortList(this.listB);
 
         for(int i = 0; i < sortedLocationsA.Length; i++)
         {
-            int current = Math.Abs(sortedLocationsA[i].id - sortedLocationsB[i].id);
+            int current = Math.Abs(sortedLocationsA[i] - sortedLocationsB[i]);
             distances = distances + current; 
         }
 
