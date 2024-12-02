@@ -45,7 +45,7 @@ public class Day01A
         }
     }
 
-    public class ListWriter
+    private class ListWriter
     {
         public int[] list { get; private set; }
 
@@ -79,7 +79,7 @@ public class Day01A
         }
     }
 
-    public class LocationComparer
+    private class LocationComparer
     {
         private int[] locationsA;
         private int[] locationsB;
