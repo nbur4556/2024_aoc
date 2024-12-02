@@ -1,23 +1,64 @@
-﻿int[] listA = [3, 4, 2, 1, 3, 3];
-int[] listB = [4, 3, 5, 3, 9, 3];
+﻿using System.IO;
 
-LocationComparer locationComparer = new LocationComparer(
-    [3, 4, 2, 1, 3, 3],
-    [4, 3, 5, 3, 9, 3]
-);
+if (args.Length <= 0)
+{
+    Console.WriteLine("Please provide a path to input data");
+    return;
+}
+String path = args[0];
+String? line;
 
-int distances = locationComparer.CompareLocationPairDistance();
-Console.WriteLine(distances);
+ListWriter locationWriterA = new ListWriter();
+ListWriter locationWriterB = new ListWriter();
+
+try
+{
+    StreamReader sr = new StreamReader(path);
+    line = sr.ReadLine();
+    while (line != null)
+    {
+        // Console.WriteLine(line);
+        line = sr.ReadLine();
+    }
+    sr.Close();
+}
+catch (Exception e)
+{
+    Console.WriteLine("Exception: " + e.Message);
+}
+finally
+{
+    LocationComparer locationComparer = new LocationComparer
+        (locationWriterA.list, locationWriterB.list);
+
+    int distances = locationComparer.CompareLocationPairDistance();
+    Console.WriteLine(distances);
+}
+
+public class ListWriter
+{
+    public int[] list { get; private set; }
+
+    public ListWriter()
+    {
+        list = new int[0];
+    }
+
+    public void AddToList(int num)
+    {
+        list = list.Concat(new int[] { num }).ToArray();
+    }
+}
 
 public class LocationComparer
 {
-    private int[] listA;
-    private int[] listB;
+    private int[] locationsA;
+    private int[] locationsB;
 
     public LocationComparer(int[] listA, int[] listB)
     {
-        this.listA = this.SortList(listA);
-        this.listB = this.SortList(listB);
+        this.locationsA = this.SortList(listA);
+        this.locationsB = this.SortList(listB);
     }
 
     private int[] SortList(int[] list)
@@ -53,15 +94,11 @@ public class LocationComparer
     public int CompareLocationPairDistance()
     {
         int distances = 0;
-        int[] sortedLocationsA = this.SortList(this.listA);
-        int[] sortedLocationsB = this.SortList(this.listB);
-
-        for(int i = 0; i < sortedLocationsA.Length; i++)
+        for (int i = 0; i < locationsA.Length; i++)
         {
-            int current = Math.Abs(sortedLocationsA[i] - sortedLocationsB[i]);
-            distances = distances + current; 
+            int current = Math.Abs(locationsA[i] - locationsB[i]);
+            distances = distances + current;
         }
-
         return distances;
     }
 }
