@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-if (args.Length <= 0)
+﻿if (args.Length <= 0)
 {
     Console.WriteLine("Please provide a path to input data");
     return;
@@ -17,7 +15,8 @@ try
     line = sr.ReadLine();
     while (line != null)
     {
-        // Console.WriteLine(line);
+        locationWriterA.AddToList(line, true);
+        locationWriterB.AddToList(line, false);
         line = sr.ReadLine();
     }
     sr.Close();
@@ -47,6 +46,23 @@ public class ListWriter
     public void AddToList(int num)
     {
         list = list.Concat(new int[] { num }).ToArray();
+    }
+
+    // An input line is a pair of numbers in string format
+    public void AddToList(String inputLine, bool isFirst)
+    {
+        String[] vals = inputLine.Split(" ");
+        int val1 = Int32.Parse(vals[0]);
+        int val2 = Int32.Parse(vals[3]);
+
+        if (isFirst == true)
+        {
+            this.AddToList(val1);
+        }
+        else
+        {
+            this.AddToList(val2);
+        }
     }
 }
 
