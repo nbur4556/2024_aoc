@@ -1,26 +1,13 @@
 ﻿int[] listA = [3, 4, 2, 1, 3, 3];
 int[] listB = [4, 3, 5, 3, 9, 3];
 
-ListComparer listComparer = new ListComparer(
+LocationComparer locationComparer = new LocationComparer(
     [3, 4, 2, 1, 3, 3],
     [4, 3, 5, 3, 9, 3]
 );
 
-Console.WriteLine("List A: length " + listComparer.listA.Length);
-LocationId[] sortedListA = listComparer.SortList(listComparer.listA);
-for(int i = 0; i < sortedListA.Length; i++)
-{
-    Console.WriteLine("{ " + sortedListA[i].id + ", " + sortedListA[i].index + " }");
-}
-Console.WriteLine();
-
-Console.WriteLine("List B: length " + listComparer.listB.Length);
-LocationId[] sortedListB = listComparer.SortList(listComparer.listB);
-for(int i = 0; i < sortedListB.Length; i++)
-{
-    Console.WriteLine("{ " + sortedListB[i].id + ", " + sortedListB[i].index + " }");
-}
-Console.WriteLine();
+int distances = locationComparer.CompareLocationPairDistance();
+Console.WriteLine(distances);
 
 public struct LocationId()
 {
@@ -33,21 +20,19 @@ public struct LocationId()
     }
 }
 
-// TODO: account for unequal lists?
-public class ListComparer
+public class LocationComparer
 {
-    //TODO: Should be private if possible
-    public LocationId[] listA;
-    public LocationId[] listB;
+    private LocationId[] listA;
+    private LocationId[] listB;
 
-    public ListComparer(int[] listA, int[] listB)
+    public LocationComparer(int[] listA, int[] listB)
     {
         this.listA = this.ConvertIntegerList(listA);
         this.listB = this.ConvertIntegerList(listB);
     }
 
     // TODO: Possibly should be a method on the LocationId struct?
-    private LocationId[] ConvertIntegerList(int[] list) 
+    private LocationId[] ConvertIntegerList(int[] list)
     {
         LocationId[] ids = new LocationId[list.Length];
         for (int i = 0; i < list.Length; i++)
@@ -58,8 +43,9 @@ public class ListComparer
         return ids;
     }
 
-    public LocationId[] SortList(LocationId[] list) {
-        if (list.Length <= 1) 
+    private LocationId[] SortList(LocationId[] list)
+    {
+        if (list.Length <= 1)
         {
             return list;
         }
@@ -68,11 +54,14 @@ public class ListComparer
         LocationId[] left = new LocationId[0];
         LocationId[] right = new LocationId[0];
 
-        for (int i = 1; i < list.Length; i ++) {
+        for (int i = 1; i < list.Length; i++)
+        {
             if (list[i].id < pivot.id)
             {
                 left = left.Concat(new LocationId[] { list[i] }).ToArray();
-            } else {
+            }
+            else
+            {
                 right = right.Concat(new LocationId[] { list[i] }).ToArray();
             }
         }
@@ -83,18 +72,19 @@ public class ListComparer
         return left.Concat(middle.Concat(right)).ToArray();
     }
 
-    // TODO: This method may not be used
-    public LocationId LocateSmallestNumber(LocationId[] list)
+    // TODO: account for unequal lists?
+    public int CompareLocationPairDistance()
     {
-        LocationId smallest = list[0];
-        for (int i = 0; i < list.Length; i++)
+        int distances = 0;
+        LocationId[] sortedLocationsA = this.SortList(this.listA);
+        LocationId[] sortedLocationsB = this.SortList(this.listB);
+
+        for(int i = 0; i < sortedLocationsA.Length; i++)
         {
-            if (list[i].id < smallest.id)
-            {
-                smallest = list[i];
-            }
+            int current = Math.Abs(sortedLocationsA[i].id - sortedLocationsB[i].id);
+            distances = distances + current; 
         }
 
-        return smallest;
+        return distances;
     }
 }
