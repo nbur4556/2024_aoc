@@ -4,14 +4,9 @@ public class Day01A
     private ListWriter locationWriterA;
     private ListWriter locationWriterB;
 
-    public Day01A(String[] args)
+    public Day01A(String path)
     {
-        if (args.Length <= 0)
-        {
-            Console.WriteLine("Please provide a path to input data");
-            Console.WriteLine();
-        }
-        path = args[0];
+        this.path = path;
         locationWriterA = new ListWriter();
         locationWriterB = new ListWriter();
     }
